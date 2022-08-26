@@ -1,50 +1,13 @@
 import telebot
-import sqlalchemy as sq
 import time
-import config as c
-from VK_user import *
 from telebot.types import InputMediaPhoto
-from sqlalchemy.orm import sessionmaker
-from news_bot_models import Users, Groups, Posts, create_tables
+from Fedya_news_bot.Class.VK_user import UsersVK
+from Fedya_news_bot.Class.TG_user import User_TG
+from Fedya_news_bot.DB.news_bot_db import add_data, bd_get_id, bd_get_post_id
+from Fedya_news_bot.DB.news_bot_models import Users, Groups, Posts
 
 
 bot = telebot.TeleBot('THIS IS YOUR TOKEN TELEBOT')
-DSN = f'postgresql://{c.USER}:{c.PASSWORD}@{c.HOST}:{c.PORT}/{c.NAME_DB}'
-engine = sq.create_engine(DSN)
-
-Session = sessionmaker(bind=engine)
-session = Session()
-create_tables(engine)
-
-
-def add_data(model, **columns_values):
-    session.add(model(**columns_values))
-    session.commit()
-
-
-def bd_get_id(chat_id):
-    query = session.query(Users).filter(Users.chat_id == chat_id).all()
-    for output in query:
-        return str(output)
-
-
-def bd_get_post_id(chat_id, name_group):
-    posts = []
-    query = session.query(Posts)
-    query = query.join(Groups)
-    query = query.join(Users)
-    query = query.filter(Users.chat_id == chat_id, Groups.name == name_group).all()
-    for output in query:
-        posts.append(str(output))
-    return posts
-
-
-class User_TG:
-    def __init__(self):
-        self.chat_id = None
-        self.id_vk = None
-        self.name_group = None
-
 
 user_tg = User_TG()
 
@@ -109,9 +72,6 @@ def send_media_group_from_sc(message):
                         media.append(photo)
                 bot.send_media_group(channel_name, media=media)
         time.sleep(60)
-
-
-session.close()
 
 
 if __name__ == "__main__":

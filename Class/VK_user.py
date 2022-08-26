@@ -2,7 +2,7 @@ import requests
 from pprint import pprint
 
 
-TOKEN_VK = 'THIS IS YOUR TOKEN VK'
+TOKEN_VK = 'THIS IS YOUR TOKEN'
 
 
 class UsersVK:
@@ -42,19 +42,6 @@ class UsersVK:
         list_info_post = self.get_group_wall(user_id, name_group, count)
         data = {}
         for info in list_info_post:
-            # if info['attachments'][0]['type'] == 'video':
-            #     type_sizes = [1500, 1080, 900, 807, 720, 695, 675, 604]
-            #     url_photo = []
-            #     for num in type_sizes:
-            #         size = [x for x in info['attachments'][0]['video']['image'] if x['height'] == num]
-            #         if size:
-            #             url_photo.append(size[0]['url'])
-            #             break
-            # data.setdefault(info['id'], {
-            #     'title': info['attachments'][0]['video']['title'],
-            #     'text': info['text'],
-            #     'url': url_photo}
-            #                 )
             if info['attachments'][0]['type'] == 'photo':
                 type_sizes = ['w', 'z', 'y', 'x', 'm', 's']
                 url_photo = []
